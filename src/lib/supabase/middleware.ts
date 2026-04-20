@@ -40,6 +40,9 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Only these emails are allowed to use the app
+  const ALLOWED_EMAILS = ["srveale42@gmail.com"];
+
   // Redirect unauthenticated users to login (except the login page itself
   // and the auth callback route)
   const { pathname } = request.nextUrl;
@@ -47,6 +50,14 @@ export async function updateSession(request: NextRequest) {
     pathname === "/login" || pathname.startsWith("/auth/");
 
   if (!user && !isPublic) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
+  // Block users whose email is not in the allowlist
+  if (user && !ALLOWED_EMAILS.includes(user.email ?? "")) {
+    await supabase.auth.signOut();
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

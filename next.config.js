@@ -1,10 +1,20 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
+      },
+    ],
+  },
+};
 
 // Fail fast during build if required env vars are missing
 const requiredEnvVars = [
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "ANTHROPIC_API_KEY",
 ];
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {

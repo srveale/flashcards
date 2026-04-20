@@ -141,7 +141,7 @@ export default function Dashboard() {
       <main className="max-w-3xl mx-auto px-4 py-8">
         {/* Summary */}
         {decks.length > 0 && (
-          <div className="mb-6 p-4 bg-white rounded-xl shadow-sm border border-gray-100">
+          <div className="mb-6 p-4 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
             <p className="text-gray-600">
               <span className="font-semibold text-indigo-600">
                 {decks.reduce((sum, d) => sum + (d.due_count ?? 0), 0)}
@@ -150,8 +150,32 @@ export default function Dashboard() {
               <span className="font-semibold">{decks.length}</span> deck
               {decks.length !== 1 ? "s" : ""}
             </p>
+            {decks.reduce((sum, d) => sum + (d.due_count ?? 0), 0) > 0 && (
+              <button
+                onClick={() => router.push("/study/all")}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium whitespace-nowrap ml-4"
+              >
+                Study All
+              </button>
+            )}
           </div>
         )}
+
+        {/* Action buttons */}
+        <div className="mb-6 flex gap-3">
+          <button
+            onClick={() => router.push("/generate")}
+            className="flex-1 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium flex items-center justify-center gap-2"
+          >
+            ✨ Generate from Content
+          </button>
+          <button
+            onClick={() => setShowNewDeck(true)}
+            className="py-3 px-5 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-indigo-400 hover:text-indigo-600 transition-colors font-medium"
+          >
+            + New Deck
+          </button>
+        </div>
 
         {/* New deck form */}
         {showNewDeck ? (
@@ -186,14 +210,7 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
-        ) : (
-          <button
-            onClick={() => setShowNewDeck(true)}
-            className="mb-6 w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-indigo-400 hover:text-indigo-600 transition-colors font-medium"
-          >
-            + New Deck
-          </button>
-        )}
+        ) : null}
 
         {/* Deck list */}
         {decks.length === 0 ? (
